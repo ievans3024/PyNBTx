@@ -4,8 +4,8 @@
 __author__ = 'ievans3024'
 __version__ = '0.0.1'
 
-from tkinter import Tk, BOTH
-from tkinter.ttk import Frame, Style
+from Tkinter import Tk, BOTH
+from ttk import Frame, Style
 
 
 class ToolBar(Frame):
