@@ -4,8 +4,9 @@
 __author__ = 'ievans3024'
 __version__ = '0.0.1'
 
-from tkinter import Tk, BOTH, N, PhotoImage, S
-from tkinter.ttk import Button, Frame, Separator, Style
+from os import getcwd
+from tkinter import BOTH, filedialog, Menu, N, PhotoImage, S, Tk
+from tkinter.ttk import Button, Frame, Menubutton, Separator, Style
 
 # Tk instantiated outside of __main__ to allow use of Image classes for icon definitions
 root = Tk()
@@ -49,6 +50,32 @@ icons = {
         'search': PhotoImage(file='icons/edit-find.png')
     }
 }
+
+
+class MainMenu(Menu):
+
+    def __init__(self, parent):
+
+        Menu.__init__(self, parent)
+
+        self.parent = parent
+
+        menu_file = Menu(self, tearoff=0)
+        menu_file.add_command(label='New...')
+        menu_file.add_command(label='Open...', command=lambda: filedialog.askopenfilenames(initialdir=getcwd()))
+        menu_file.add_command(label='Open Folder...', command=lambda: filedialog.askdirectory(initialdir=getcwd()))
+        menu_file.add_command(label='Save...')
+        menu_file.add_command(label='Save As...')
+        menu_file.add_separator()
+        menu_file.add_command(label='Exit', command=root.quit)
+
+        menu_edit = Menu(self, tearoff=0)
+        menu_edit.add_command(label='Copy')
+        menu_edit.add_command(label='Cut')
+        menu_edit.add_command(label='Paste')
+
+        self.add_cascade(label='File', menu=menu_file)
+        self.add_cascade(label='Edit', menu=menu_edit)
 
 
 class ToolBar(Frame):
@@ -110,8 +137,11 @@ class MainWindow(Frame):
 
     def ui_init(self):
 
+        menu = MainMenu(root)
+        root['menu'] = menu
+
         toolbar = ToolBar(self)
-        toolbar.pack(padx=4, pady=4)
+        toolbar.pack(fill=BOTH, padx=4, pady=4)
 
 
 def main():
