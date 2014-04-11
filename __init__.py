@@ -51,6 +51,9 @@ icons = {
     }
 }
 
+OPEN_FILES = lambda: filedialog.askopenfilenames(initialdir=getcwd())
+OPEN_FOLDER = lambda: filedialog.askdirectory(initialdir=getcwd())
+
 
 class MainMenu(Menu):
 
@@ -62,8 +65,8 @@ class MainMenu(Menu):
 
         menu_file = Menu(self, tearoff=0)
         menu_file.add_command(label='New...')
-        menu_file.add_command(label='Open...', command=lambda: filedialog.askopenfilenames(initialdir=getcwd()))
-        menu_file.add_command(label='Open Folder...', command=lambda: filedialog.askdirectory(initialdir=getcwd()))
+        menu_file.add_command(label='Open...', command=OPEN_FILES)
+        menu_file.add_command(label='Open Folder...', command=OPEN_FOLDER)
         menu_file.add_command(label='Save...')
         menu_file.add_command(label='Save As...')
         menu_file.add_separator()
@@ -87,7 +90,7 @@ class ToolBar(Frame):
         self.parent = parent
 
         elements = [
-            Button(self, image=icons['actions']['open']),
+            Button(self, image=icons['actions']['open'], command=OPEN_FILES),
             Button(self, image=icons['actions']['save']),
             Separator(self, orient='vertical'),
             Button(self, image=icons['actions']['search']),
