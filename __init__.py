@@ -58,7 +58,6 @@ class ToolBar(Frame):
         Frame.__init__(self, parent)
 
         self.parent = parent
-        self.pack(padx=3)
 
         elements = [
             Button(self, image=icons['actions']['open']),
@@ -85,7 +84,7 @@ class ToolBar(Frame):
             if isinstance(e, Separator):
                 e.grid(row=0, column=elements.index(e), sticky=N+S, padx=6)
             else:
-                e.grid(row=0, column=elements.index(e), padx=1, pady=4)
+                e.grid(row=0, column=elements.index(e), padx=1)
 
 
 class TreeDisplay(Frame):
@@ -107,11 +106,12 @@ class MainWindow(Frame):
 
         self.pack(fill=BOTH, expand=1)
 
-        toolbar = ToolBar(self)
-        toolbar.pack()
+        self.ui_init()
 
     def ui_init(self):
-        pass
+
+        toolbar = ToolBar(self)
+        toolbar.pack(padx=4, pady=4)
 
 
 def main():
