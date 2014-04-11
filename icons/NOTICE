@@ -1,0 +1,30 @@
+All icons included except those listed below are taken from the Faenza icon pack by Matthieu James (see AUTHORS and COPYING)
+
+The full icon pack can be found on gnome-look.org at:
+http://gnome-look.org/content/show.php/Faenza?content=128143
+
+The following files are modifications of icons found in the Faenza pack:
+
+
+tag-byte.png
+tag-byte-new.png
+tag-short.png
+tag-short-new.png
+tag-int.png
+tag-int-new.png
+tag-long.png
+tag-long-new.png
+tag-float.png
+tag-float-new.png
+tag-double.png
+tag-double-new.png
+tag-byte-array.png
+tag-byte-array-new.png
+tag-int-array.png
+tag-int-array-new.png
+tag-string.png
+tag-string-new.png
+tag-list.png
+tag-list-new.png
+tag-compound.png
+tag-compound-new.png
