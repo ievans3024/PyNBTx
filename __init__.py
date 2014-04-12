@@ -117,8 +117,25 @@ class ToolBar(Frame):
                 e.grid(row=0, column=elements.index(e), padx=1)
 
 
-class TreeDisplay(Frame):
-    pass
+class TreeDisplay(Treeview):
+
+    class Node(object):
+
+        def __init__(self):
+            pass
+
+        def add(self):
+            pass
+
+        def remove(self):
+            pass
+
+    def __init__(self, parent, **kwargs):
+
+        # TODO: Store non-treeview kwargs locally, then strip out and pass the rest to Treeview.__init__()
+        Treeview.__init__(self, parent, **kwargs)
+
+        self.parent = parent
 
 
 class MainWindow(Frame):
