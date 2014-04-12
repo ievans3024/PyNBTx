@@ -5,8 +5,8 @@ __author__ = 'ievans3024'
 __version__ = '0.0.1'
 
 from os import getcwd
-from tkinter import BOTH, filedialog, Menu, N, PhotoImage, S, Tk
-from tkinter.ttk import Button, Frame, Menubutton, Separator, Style
+from tkinter import BOTH, E, filedialog, LEFT, Menu, N, NW, PhotoImage, S, Tk, W
+from tkinter.ttk import Button, Frame, Menubutton, Separator, Style, Treeview
 
 # Tk instantiated outside of __main__ to allow use of Image classes for icon definitions
 root = Tk()
@@ -144,7 +144,22 @@ class MainWindow(Frame):
         root['menu'] = menu
 
         toolbar = ToolBar(self)
-        toolbar.pack(fill=BOTH, padx=4, pady=4)
+        toolbar.pack(anchor=NW, padx=4, pady=4)
+
+        tree = Treeview(self, height=20)
+        tree.column('#0', width=300)
+        tree.insert('', 'end', 'root', text='root')
+        tree.insert('root', '0', 'one', text='one')
+        tree.insert('one', '0', 'two', text='two')
+        tree.insert('two', '0', 'three', text='three')
+        tree.insert('three', '0', 'four', text='four')
+        tree.insert('four', '0', 'five', text='five')
+        tree.insert('five', '0', 'six', text='six')
+        tree.insert('six', '0', 'seven', text='seven')
+        tree.insert('seven', '0', 'eight', text='eight')
+        tree.insert('eight', '0', 'nine', text='nine')
+        tree.insert('nine', '0', 'ten', text='ten')
+        tree.pack(fill=BOTH, anchor=NW, padx=4, pady=4)
 
 
 def main():
