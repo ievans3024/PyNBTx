@@ -13,6 +13,7 @@ root = Tk()
 
 # Icon definitions are necessary because widgets do not save data provided to the 'image' kwarg to the instance.
 # To prevent image data from being garbage collected, they must exist in an external possible reference.
+# TODO: replace 24px icons with 16px icons
 icons = {
     'tags': {
         'byte': PhotoImage(file='icons/tag-byte.png'),
@@ -67,8 +68,10 @@ class MainMenu(Menu):
         menu_file.add_command(label='New...')
         menu_file.add_command(label='Open...', command=OPEN_FILES)
         menu_file.add_command(label='Open Folder...', command=OPEN_FOLDER)
+        # TODO: add "open minecraft save folder" option here
+        # TODO: add separator here
         menu_file.add_command(label='Save...')
-        menu_file.add_command(label='Save As...')
+        # TODO: add "refresh" option here
         menu_file.add_separator()
         menu_file.add_command(label='Exit', command=root.quit)
 
@@ -76,6 +79,16 @@ class MainMenu(Menu):
         menu_edit.add_command(label='Copy')
         menu_edit.add_command(label='Cut')
         menu_edit.add_command(label='Paste')
+        # TODO: add separator here
+        # TODO: add "rename", "edit" and "delete" options here
+        # TODO: add separator here
+        # TODO: add "move up" and "move down" options here
+
+        # TODO: add "Search" top-level menu
+        # [find] [find next] | [replace] | [chunk finder]
+
+        # TODO: add "Help" top-level menu
+        # [About]
 
         self.add_cascade(label='File', menu=menu_file)
         self.add_cascade(label='Edit', menu=menu_edit)
@@ -91,9 +104,13 @@ class ToolBar(Frame):
 
         elements = [
             Button(self, image=icons['actions']['open'], command=OPEN_FILES),
+            # TODO: add "open folder" button here
             Button(self, image=icons['actions']['save']),
+            # TODO: add "refresh content" button here
             Separator(self, orient='vertical'),
-            Button(self, image=icons['actions']['search']),
+            # TODO: add "cut", "copy", "paste" buttons and another separator here
+            Button(self, image=icons['actions']['search']),  # TODO: move this icon to the end of the toolbar
+            # TODO: add "rename" button here
             Button(self, image=icons['actions']['edit']),
             Button(self, image=icons['actions']['delete']),
             Separator(self, orient='vertical'),
