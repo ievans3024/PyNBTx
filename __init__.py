@@ -13,25 +13,22 @@ root = Tk()
 
 # Icon definitions are necessary because widgets do not save data provided to the 'image' kwarg to the instance.
 # To prevent image data from being garbage collected, they must exist in an external possible reference.
-# TODO: replace 24px icons with 16px icons
 icons = {
-    'tags': {
-        'byte': PhotoImage(file='icons/tag-byte.png'),
-        'byte_array': PhotoImage(file='icons/tag-byte-array.png'),
-        'compound': PhotoImage(file='icons/tag-compound.png'),
-        'double': PhotoImage(file='icons/tag-double.png'),
-        'float': PhotoImage(file='icons/tag-float.png'),
-        'int': PhotoImage(file='icons/tag-int.png'),
-        'int_array': PhotoImage(file='icons/tag-int-array.png'),
-        'list': PhotoImage(file='icons/tag-list.png'),
-        'long': PhotoImage(file='icons/tag-long.png'),
-        'short': PhotoImage(file='icons/tag-short.png'),
-        'string': PhotoImage(file='icons/text-plain.png'),
-    },
+    'about': PhotoImage(file='icons/gnome-about-logo.png'),
     'actions': {
+        'chunk_find': PhotoImage(file='icons/workspace-switcher.png'),
+        'copy': PhotoImage(file='icons/edit-copy.png'),
+        'cut': PhotoImage(file='icons/edit-cut.png'),
         'delete': PhotoImage(file='icons/list-remove.png'),
         'edit': PhotoImage(file='icons/gtk-edit.png'),
+        'exit': PhotoImage(file='icons/system-log-out.png'),
+        'move': {
+            'down': PhotoImage(file='icons/go-down.png'),
+            'right': PhotoImage(file='icons/go-next.png'),
+            'up': PhotoImage(file='icons/go-up.png')
+        },
         'new': {
+            'generic': PhotoImage(file='icons/list-add.png'),
             'tag': {
                 'byte': PhotoImage(file='icons/tag-byte-new.png'),
                 'byte_array': PhotoImage(file='icons/tag-byte-array-new.png'),
@@ -46,9 +43,30 @@ icons = {
                 'string': PhotoImage(file='icons/tag-string-new.png'),
             }
         },
-        'open': PhotoImage(file='icons/document-open.png'),
+        'open': {
+            'file': PhotoImage(file='icons/document-open.png'),
+            'folder': PhotoImage(file='icons/folder-move.png'),
+            'mc_folder': PhotoImage(file='icons/go-home.png')
+        },
+        'paste': PhotoImage(file='icons/edit-paste.png'),
+        'refresh': PhotoImage(file='icons/view-refresh.png'),
+        'rename': PhotoImage(file='icons/format-text-strikethrough.png'),
+        'replace': PhotoImage(file='icons/edit-find-replace.png'),
         'save': PhotoImage(file='icons/media-floppy.png'),
         'search': PhotoImage(file='icons/edit-find.png')
+    },
+    'tags': {
+        'byte': PhotoImage(file='icons/tag-byte.png'),
+        'byte_array': PhotoImage(file='icons/tag-byte-array.png'),
+        'compound': PhotoImage(file='icons/tag-compound.png'),
+        'double': PhotoImage(file='icons/tag-double.png'),
+        'float': PhotoImage(file='icons/tag-float.png'),
+        'int': PhotoImage(file='icons/tag-int.png'),
+        'int_array': PhotoImage(file='icons/tag-int-array.png'),
+        'list': PhotoImage(file='icons/tag-list.png'),
+        'long': PhotoImage(file='icons/tag-long.png'),
+        'short': PhotoImage(file='icons/tag-short.png'),
+        'string': PhotoImage(file='icons/text-plain.png'),
     }
 }
 
@@ -65,33 +83,46 @@ class MainMenu(Menu):
         self.parent = parent
 
         menu_file = Menu(self, tearoff=0)
-        menu_file.add_command(label='New...')
-        menu_file.add_command(label='Open...', command=OPEN_FILES)
-        menu_file.add_command(label='Open Folder...', command=OPEN_FOLDER)
-        # TODO: add "open minecraft save folder" option here
-        # TODO: add separator here
-        menu_file.add_command(label='Save...')
-        # TODO: add "refresh" option here
+        menu_file.add_command(compound='left', image=icons['actions']['new']['generic'], label='New...')
+        menu_file.add_command(compound='left',
+                              image=icons['actions']['open']['file'], label='Open...', command=OPEN_FILES)
+        menu_file.add_command(compound='left',
+                              image=icons['actions']['open']['folder'], label='Open Folder...', command=OPEN_FOLDER)
+        menu_file.add_command(compound='left',
+                              image=icons['actions']['open']['mc_folder'], label='Open Minecraft Save Folder...')
         menu_file.add_separator()
-        menu_file.add_command(label='Exit', command=root.quit)
+        menu_file.add_command(compound='left', image=icons['actions']['save'], label='Save...')
+        menu_file.add_command(compound='left', image=icons['actions']['refresh'], label='Refresh')
+        menu_file.add_separator()
+        menu_file.add_command(compound='left', image=icons['actions']['exit'], label='Exit', command=root.quit)
 
         menu_edit = Menu(self, tearoff=0)
-        menu_edit.add_command(label='Copy')
-        menu_edit.add_command(label='Cut')
-        menu_edit.add_command(label='Paste')
-        # TODO: add separator here
-        # TODO: add "rename", "edit" and "delete" options here
-        # TODO: add separator here
-        # TODO: add "move up" and "move down" options here
+        menu_edit.add_command(compound='left', image=icons['actions']['copy'], label='Copy')
+        menu_edit.add_command(compound='left', image=icons['actions']['cut'], label='Cut')
+        menu_edit.add_command(compound='left', image=icons['actions']['paste'], label='Paste')
+        menu_edit.add_separator()
+        menu_edit.add_command(compound='left', image=icons['actions']['rename'], label='Rename')
+        menu_edit.add_command(compound='left', image=icons['actions']['edit'], label='Edit')
+        menu_edit.add_command(compound='left', image=icons['actions']['delete'], label='Delete')
+        menu_edit.add_separator()
+        menu_edit.add_command(compound='left', image=icons['actions']['move']['up'], label='Move Up')
+        menu_edit.add_command(compound='left', image=icons['actions']['move']['down'], label='Move Down')
 
-        # TODO: add "Search" top-level menu
-        # [find] [find next] | [replace] | [chunk finder]
+        menu_search = Menu(self, tearoff=0)
+        menu_search.add_command(compound='left', image=icons['actions']['search'], label='Find')
+        menu_search.add_command(compound='left', image=icons['actions']['move']['right'], label='Find Next')
+        menu_search.add_separator()
+        menu_search.add_command(compound='left', image=icons['actions']['replace'], label='Replace')
+        menu_search.add_separator()
+        menu_search.add_command(compound='left', image=icons['actions']['chunk_find'], label='Chunk Finder')
 
-        # TODO: add "Help" top-level menu
-        # [About]
+        menu_help = Menu(self, tearoff=0)
+        menu_help.add_command(compound='left', image=icons['about'], label='About')
 
         self.add_cascade(label='File', menu=menu_file)
         self.add_cascade(label='Edit', menu=menu_edit)
+        self.add_cascade(label='Search', menu=menu_search)
+        self.add_cascade(label='Help', menu=menu_help)
 
 
 class ToolBar(Frame):
@@ -103,14 +134,16 @@ class ToolBar(Frame):
         self.parent = parent
 
         elements = [
-            Button(self, image=icons['actions']['open'], command=OPEN_FILES),
-            # TODO: add "open folder" button here
+            Button(self, image=icons['actions']['open']['file'], command=OPEN_FILES),
+            Button(self, image=icons['actions']['open']['folder'], command=OPEN_FOLDER),
             Button(self, image=icons['actions']['save']),
-            # TODO: add "refresh content" button here
+            Button(self, image=icons['actions']['refresh']),
             Separator(self, orient='vertical'),
-            # TODO: add "cut", "copy", "paste" buttons and another separator here
-            Button(self, image=icons['actions']['search']),  # TODO: move this icon to the end of the toolbar
-            # TODO: add "rename" button here
+            Button(self, image=icons['actions']['cut']),
+            Button(self, image=icons['actions']['copy']),
+            Button(self, image=icons['actions']['paste']),
+            Separator(self, orient='vertical'),
+            Button(self, image=icons['actions']['rename']),
             Button(self, image=icons['actions']['edit']),
             Button(self, image=icons['actions']['delete']),
             Separator(self, orient='vertical'),
@@ -124,7 +157,9 @@ class ToolBar(Frame):
             Button(self, image=icons['actions']['new']['tag']['int_array']),
             Button(self, image=icons['actions']['new']['tag']['string']),
             Button(self, image=icons['actions']['new']['tag']['list']),
-            Button(self, image=icons['actions']['new']['tag']['compound'])
+            Button(self, image=icons['actions']['new']['tag']['compound']),
+            Separator(self, orient='vertical'),
+            Button(self, image=icons['actions']['search'])
         ]
 
         for e in elements:
