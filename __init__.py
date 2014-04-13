@@ -98,12 +98,14 @@ def open_folder():
 
 def open_mc_dir():
     global loaded_files
-    if str(platform) == 'windows':
-        mc_parent = getenv('APPDATA')
-    else:
-        mc_parent = expanduser('~')
 
-    mc_dir = join(mc_parent, '.minecraft', 'saves')
+    if str(platform) == 'windows':
+        mc_dir = join(getenv('APPDATA'), '.minecraft', 'saves')
+    elif str(platform) in ('mac', 'darwin'):
+        mc_dir = join(expanduser('~'), 'Library', 'Application Support', 'minecraft', 'saves')
+    else:
+        mc_dir = join(expanduser('~'), '.minecraft', 'saves')
+
     get_files = filedialog.askopenfilename(initialdir=mc_dir)
     # TODO: decide if I want to open all savegame nbt files or just level.dat
 
