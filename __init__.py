@@ -11,6 +11,7 @@ from tkinter import BOTH, filedialog, Menu, N, NW, PhotoImage, S, Tk, messagebox
 from tkinter.ttk import Button, Frame, Separator, Style, Treeview
 
 import nbt
+import Pmw
 
 # Tk instantiated outside of __main__ to allow use of Image classes for icon definitions
 root = Tk()
@@ -215,6 +216,32 @@ class ToolBar(Frame):
             Button(self, image=icons['actions']['new']['tag']['compound']),
             Separator(self, orient='vertical'),
             Button(self, image=icons['actions']['search'])
+        ]
+
+        tooltips = [
+            Pmw.Balloon(self).bind(elements[0], 'Open Files'),
+            Pmw.Balloon(self).bind(elements[1], 'Open Folder'),
+            Pmw.Balloon(self).bind(elements[2], 'Save Files'),
+            Pmw.Balloon(self).bind(elements[3], 'Refresh Files From Disk'),
+            Pmw.Balloon(self).bind(elements[5], 'Cut'),
+            Pmw.Balloon(self).bind(elements[6], 'Copy'),
+            Pmw.Balloon(self).bind(elements[7], 'Paste'),
+            Pmw.Balloon(self).bind(elements[9], 'Rename Tag'),
+            Pmw.Balloon(self).bind(elements[10], 'Edit Tag'),
+            Pmw.Balloon(self).bind(elements[11], 'Delete Tag'),
+            Pmw.Balloon(self).bind(elements[13], 'New Byte Tag'),
+            Pmw.Balloon(self).bind(elements[14], 'New Short Tag'),
+            Pmw.Balloon(self).bind(elements[15], 'New Int Tag'),
+            Pmw.Balloon(self).bind(elements[16], 'New Long Tag'),
+            Pmw.Balloon(self).bind(elements[17], 'New Float Tag'),
+            Pmw.Balloon(self).bind(elements[18], 'New Double Tag'),
+            Pmw.Balloon(self).bind(elements[19], 'New Byte Array Tag'),
+            Pmw.Balloon(self).bind(elements[20], 'New Int Array Tag'),
+            Pmw.Balloon(self).bind(elements[21], 'New String Tag'),
+            Pmw.Balloon(self).bind(elements[22], 'New List Tag'),
+            Pmw.Balloon(self).bind(elements[23], 'New Compound Tag'),
+            Pmw.Balloon(self).bind(elements[25], 'Find...')
+
         ]
 
         for e in elements:
