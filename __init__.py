@@ -7,7 +7,7 @@ __version__ = '0.0.2'
 from os import getcwd, getenv, walk
 from os.path import expanduser, join
 from sys import platform
-from tkinter import BOTH, filedialog, Menu, N, NW, PhotoImage, S, Tk
+from tkinter import BOTH, filedialog, Menu, N, NW, PhotoImage, S, Tk, messagebox
 from tkinter.ttk import Button, Frame, Separator, Style, Treeview
 
 import nbt
@@ -74,20 +74,26 @@ icons = {
     }
 }
 
-loaded_files = []
+loaded_files = {}
 
 
 def open_files(get_files=()):
     global loaded_files
+    loaded_files = {}
     if not get_files:
         get_files = filedialog.askopenfilenames(initialdir=getcwd())
-    # TODO: make this iterate over get_files, open and append valid nbt files to loaded_files
+    for f in get_files:
+        try:
+            loaded_files[f] = nbt.nbt.NBTFile(f)
+        except OSError:
+            messagebox.showwarning('Open File', '%s does not appear to be an NBT file.' % f)
+            pass
 
 
 def open_folder():
     global loaded_files
     filetree = walk(filedialog.askdirectory(initialdir=getcwd()))
-    # TODO: make this examine ever file in the tree, append valid nbt files to loaded_files list
+    # TODO: make this examine every file in the tree, append valid nbt files to loaded_files list
 
 
 def open_mc_dir():
@@ -102,11 +108,17 @@ def open_mc_dir():
     # TODO: decide if I want to open all savegame nbt files or just level.dat
 
 
+def refresh_files():
+    global loaded_files
+    files = (f for f in loaded_files)
+    open_files(get_files=files)
+
+
 def save_files():
     global loaded_files
     for f in loaded_files:
-        if isinstance(f, nbt.nbt.NBTFile):
-            f.write_file()
+        if isinstance(loaded_files[f], nbt.nbt.NBTFile):
+            loaded_files[f].write_file()
 
 
 class MainMenu(Menu):
@@ -130,7 +142,8 @@ class MainMenu(Menu):
                               label='Open Minecraft Save Folder...', command=open_mc_dir)
         menu_file.add_separator()
         menu_file.add_command(compound='left', image=icons['actions']['save'], label='Save...', command=save_files)
-        menu_file.add_command(compound='left', image=icons['actions']['refresh'], label='Refresh')
+        menu_file.add_command(compound='left', image=icons['actions']['refresh'],
+                              label='Refresh', command=refresh_files)
         menu_file.add_separator()
         menu_file.add_command(compound='left', image=icons['actions']['exit'], label='Exit', command=root.quit)
 
@@ -176,8 +189,8 @@ class ToolBar(Frame):
         elements = [
             Button(self, image=icons['actions']['open']['file'], command=open_files),
             Button(self, image=icons['actions']['open']['folder'], command=open_folder),
-            Button(self, image=icons['actions']['save']),
-            Button(self, image=icons['actions']['refresh']),
+            Button(self, image=icons['actions']['save'], command=save_files),
+            Button(self, image=icons['actions']['refresh'], command=refresh_files),
             Separator(self, orient='vertical'),
             Button(self, image=icons['actions']['cut']),
             Button(self, image=icons['actions']['copy']),
