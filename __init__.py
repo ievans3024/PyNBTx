@@ -2,11 +2,15 @@
 # coding: utf-8
 
 __author__ = 'ievans3024'
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
-from os import getcwd
-from tkinter import BOTH, E, filedialog, LEFT, Menu, N, NW, PhotoImage, S, Tk, W
-from tkinter.ttk import Button, Frame, Menubutton, Separator, Style, Treeview
+from os import getcwd, getenv, walk
+from os.path import expanduser, join
+from sys import platform
+from tkinter import BOTH, filedialog, Menu, N, NW, PhotoImage, S, Tk
+from tkinter.ttk import Button, Frame, Separator, Style, Treeview
+
+import nbt
 
 # Tk instantiated outside of __main__ to allow use of Image classes for icon definitions
 root = Tk()
@@ -70,12 +74,45 @@ icons = {
     }
 }
 
-OPEN_FILES = lambda: filedialog.askopenfilenames(initialdir=getcwd())
-OPEN_FOLDER = lambda: filedialog.askdirectory(initialdir=getcwd())
+loaded_files = []
+
+
+def open_files(get_files=()):
+    global loaded_files
+    if not get_files:
+        get_files = filedialog.askopenfilenames(initialdir=getcwd())
+    # TODO: make this iterate over get_files, open and append valid nbt files to loaded_files
+
+
+def open_folder():
+    global loaded_files
+    filetree = walk(filedialog.askdirectory(initialdir=getcwd()))
+    # TODO: make this examine ever file in the tree, append valid nbt files to loaded_files list
+
+
+def open_mc_dir():
+    global loaded_files
+    if str(platform) == 'windows':
+        mc_parent = getenv('APPDATA')
+    else:
+        mc_parent = expanduser('~')
+
+    mc_dir = join(mc_parent, '.minecraft', 'saves')
+    get_files = filedialog.askopenfilename(initialdir=mc_dir)
+    # TODO: decide if I want to open all savegame nbt files or just level.dat
+
+
+def save_files():
+    global loaded_files
+    for f in loaded_files:
+        if isinstance(f, nbt.nbt.NBTFile):
+            f.write_file()
 
 
 class MainMenu(Menu):
-
+    """
+    Macro class for main window menus
+    """
     def __init__(self, parent):
 
         Menu.__init__(self, parent)
@@ -85,13 +122,14 @@ class MainMenu(Menu):
         menu_file = Menu(self, tearoff=0)
         menu_file.add_command(compound='left', image=icons['actions']['new']['generic'], label='New...')
         menu_file.add_command(compound='left',
-                              image=icons['actions']['open']['file'], label='Open...', command=OPEN_FILES)
+                              image=icons['actions']['open']['file'], label='Open...', command=open_files)
         menu_file.add_command(compound='left',
-                              image=icons['actions']['open']['folder'], label='Open Folder...', command=OPEN_FOLDER)
+                              image=icons['actions']['open']['folder'], label='Open Folder...', command=open_folder)
         menu_file.add_command(compound='left',
-                              image=icons['actions']['open']['mc_folder'], label='Open Minecraft Save Folder...')
+                              image=icons['actions']['open']['mc_folder'],
+                              label='Open Minecraft Save Folder...', command=open_mc_dir)
         menu_file.add_separator()
-        menu_file.add_command(compound='left', image=icons['actions']['save'], label='Save...')
+        menu_file.add_command(compound='left', image=icons['actions']['save'], label='Save...', command=save_files)
         menu_file.add_command(compound='left', image=icons['actions']['refresh'], label='Refresh')
         menu_file.add_separator()
         menu_file.add_command(compound='left', image=icons['actions']['exit'], label='Exit', command=root.quit)
@@ -126,7 +164,9 @@ class MainMenu(Menu):
 
 
 class ToolBar(Frame):
-
+    """
+    Macro class for main window toolbar
+    """
     def __init__(self, parent):
 
         Frame.__init__(self, parent)
@@ -134,8 +174,8 @@ class ToolBar(Frame):
         self.parent = parent
 
         elements = [
-            Button(self, image=icons['actions']['open']['file'], command=OPEN_FILES),
-            Button(self, image=icons['actions']['open']['folder'], command=OPEN_FOLDER),
+            Button(self, image=icons['actions']['open']['file'], command=open_files),
+            Button(self, image=icons['actions']['open']['folder'], command=open_folder),
             Button(self, image=icons['actions']['save']),
             Button(self, image=icons['actions']['refresh']),
             Separator(self, orient='vertical'),
@@ -169,29 +209,21 @@ class ToolBar(Frame):
                 e.grid(row=0, column=elements.index(e), padx=1)
 
 
-class TreeDisplay(Treeview):
+class TreeDisplay(object):
+    """
+    Acts as an intermediary between a treeview object and one or more nbt objects
+    """
 
-    class Node(object):
+    def __init__(self, treeview, nbts=[], **kwargs):
 
-        def __init__(self):
-            pass
-
-        def add(self):
-            pass
-
-        def remove(self):
-            pass
-
-    def __init__(self, parent, **kwargs):
-
-        # TODO: Store non-treeview kwargs locally, then strip out and pass the rest to Treeview.__init__()
-        Treeview.__init__(self, parent, **kwargs)
-
-        self.parent = parent
+        self.treeview = treeview
+        self.nbts = nbts
 
 
 class MainWindow(Frame):
-
+    """
+    Macro class for the main program window
+    """
     def __init__(self, parent):
 
         Frame.__init__(self, parent)
