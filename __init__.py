@@ -81,20 +81,28 @@ loaded_files = {}
 def open_files(get_files=()):
     global loaded_files
     loaded_files = {}
+    failures = []
     if not get_files:
         get_files = filedialog.askopenfilenames(initialdir=getcwd())
     for f in get_files:
         try:
             loaded_files[f] = nbt.nbt.NBTFile(f)
         except OSError:
-            messagebox.showwarning('Open File', '%s does not appear to be an NBT file.' % f)
-            pass
+            failures.append(f)
+    if len(failures) > 1:
+        messagebox.showwarning('Open File', 'One or more files did not appear to be an NBT file and were not opened.')
+    elif len(failures) == 1:
+        messagebox.showwarning('Open File', '%s does not appear to be an NBT file.' % f)
 
 
 def open_folder():
     global loaded_files
     filetree = walk(filedialog.askdirectory(initialdir=getcwd()))
-    # TODO: make this examine every file in the tree, append valid nbt files to loaded_files list
+    files = []
+    for t in filetree:
+        for f in t[2]:
+            files.append(join(t[0], f))
+    open_files(get_files=files)
 
 
 def open_mc_dir():
@@ -241,7 +249,6 @@ class ToolBar(Frame):
             Pmw.Balloon(self).bind(elements[22], 'New List Tag'),
             Pmw.Balloon(self).bind(elements[23], 'New Compound Tag'),
             Pmw.Balloon(self).bind(elements[25], 'Find...')
-
         ]
 
         for e in elements:
