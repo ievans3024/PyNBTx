@@ -4,7 +4,7 @@
 __author__ = 'ievans3024'
 __version__ = '0.0.2'
 
-from os import getcwd, getenv, walk
+from os import getcwd, getenv, walk, access, F_OK
 from os.path import expanduser, join, split
 from sys import platform
 from tkinter import BOTH, filedialog, Menu, N, NW, PhotoImage, S, Tk, messagebox
@@ -97,6 +97,17 @@ class EventHandler(object):
 handler = EventHandler()
 
 
+def new_file():
+    global loaded_files
+    newfile = filedialog.asksaveasfilename(defaultextension='.nbt',
+                                           filetypes=(('Generic NBT', '*.nbt'), ('All Files', '*')),
+                                           initialdir=getcwd())
+    nbtfile = nbt.nbt.NBTFile()
+    nbtfile.name = split(newfile)[1]
+    loaded_files[newfile] = nbtfile
+    handler.fire('open_files')
+
+
 def open_files(get_files=()):
     global loaded_files
     loaded_files = {}
@@ -150,7 +161,7 @@ def save_files():
     global loaded_files
     for f in loaded_files:
         if isinstance(loaded_files[f], nbt.nbt.NBTFile):
-            loaded_files[f].write_file()
+            loaded_files[f].write_file(f)
 
 
 class MainMenu(Menu):
@@ -164,7 +175,8 @@ class MainMenu(Menu):
         self.parent = parent
 
         menu_file = Menu(self, tearoff=0)
-        menu_file.add_command(compound='left', image=icons['actions']['new']['generic'], label='New...')
+        menu_file.add_command(compound='left',
+                              image=icons['actions']['new']['generic'], label='New...', command=new_file)
         menu_file.add_command(compound='left',
                               image=icons['actions']['open']['file'], label='Open...', command=open_files)
         menu_file.add_command(compound='left',
@@ -399,8 +411,9 @@ class TreeDisplay(object):
             if not dir:
                 file_counter = 0
                 for f in files:
-                    filename = split(f)[1]
-                    self.treeview.insert('', '%i' % file_counter, filename, text=filename)
+                    filename = files[f].name
+                    self.treeview.insert('', '%i' % file_counter, filename,
+                                         text=filename, image=icons['tags']['compound'])
                     file_counter += 1
 
 
