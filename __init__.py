@@ -5,7 +5,7 @@ __author__ = 'ievans3024'
 __version__ = '0.0.2'
 
 from os import getcwd, getenv, walk
-from os.path import expanduser, join
+from os.path import expanduser, join, split
 from sys import platform
 from tkinter import BOTH, filedialog, Menu, N, NW, PhotoImage, S, Tk, messagebox
 from tkinter.ttk import Button, Frame, Separator, Style, Treeview
@@ -76,6 +76,25 @@ icons = {
 }
 
 loaded_files = {}
+loaded_dir = ''
+
+
+class EventHandler(object):
+
+    def __init__(self):
+        super().__init__()
+        self.events = []
+
+    def fire(self, trigger):
+        for e in self.events:
+            if e[0] == trigger:
+                e[1]()
+
+    def bind(self, trigger, event):
+        self.events.append((trigger, event))
+
+
+handler = EventHandler()
 
 
 def open_files(get_files=()):
@@ -93,11 +112,13 @@ def open_files(get_files=()):
         messagebox.showwarning('Open File', 'One or more files did not appear to be an NBT file and were not opened.')
     elif len(failures) == 1:
         messagebox.showwarning('Open File', '%s does not appear to be an NBT file.' % f)
+    handler.fire('open_files')
 
 
 def open_folder():
-    global loaded_files
-    filetree = walk(filedialog.askdirectory(initialdir=getcwd()))
+    global loaded_files, loaded_dir
+    get_dir = filedialog.askdirectory(initialdir=getcwd())
+    filetree = walk(get_dir)
     files = []
     for t in filetree:
         for f in t[2]:
@@ -368,10 +389,19 @@ class TreeDisplay(object):
     Acts as an intermediary between a treeview object and one or more nbt objects
     """
 
-    def __init__(self, treeview, nbts=[], **kwargs):
+    def __init__(self, treeview, files=None, dir=None):
 
         self.treeview = treeview
-        self.nbts = nbts
+        self.files = files
+        self.file_tree_map = {}
+
+        if files:
+            if not dir:
+                file_counter = 0
+                for f in files:
+                    filename = split(f)[1]
+                    self.treeview.insert('', '%i' % file_counter, filename, text=filename)
+                    file_counter += 1
 
 
 class MainWindow(Frame):
@@ -391,18 +421,23 @@ class MainWindow(Frame):
 
         self.pack(fill=BOTH, expand=1)
 
+        self.menu = MainMenu(root)
+        self.toolbar = ToolBar(self)
+        self.tree = Treeview(self, height=20)
+
         self.ui_init()
 
     def ui_init(self):
+        root['menu'] = self.menu
+        self.toolbar.pack(anchor=NW, padx=4, pady=4)
+        self.tree.column('#0', width=300)
+        self.tree_init()
+        self.tree.pack(fill=BOTH, anchor=NW, padx=4, pady=4)
 
-        menu = MainMenu(root)
-        root['menu'] = menu
+    def tree_init(self):
+        tree_display = TreeDisplay(self.tree, files=loaded_files, dir=loaded_dir)
 
-        toolbar = ToolBar(self)
-        toolbar.pack(anchor=NW, padx=4, pady=4)
-
-        tree = Treeview(self, height=20)
-        tree.column('#0', width=300)
+        '''
         tree.insert('', 'end', 'root', text='root')
         tree.insert('root', '0', 'one', text='one')
         tree.insert('one', '0', 'two', text='two')
@@ -415,11 +450,13 @@ class MainWindow(Frame):
         tree.insert('eight', '0', 'nine', text='nine')
         tree.insert('nine', '0', 'ten', text='ten')
         tree.pack(fill=BOTH, anchor=NW, padx=4, pady=4)
+        '''
 
 
 def main():
 
     app = MainWindow(root)
+    handler.bind('open_files', app.tree_init)
     root.mainloop()
 
 if __name__ == '__main__':
