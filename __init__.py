@@ -448,6 +448,7 @@ class MainWindow(Frame):
         self.tree.pack(fill=BOTH, anchor=NW, padx=4, pady=4)
 
     def tree_init(self):
+        # TODO: move this to a method in TreeDisplay -> app.tree_display.refresh(files=None, dir=None)
         tree_display = TreeDisplay(self.tree, files=loaded_files, dir=loaded_dir)
 
         '''
