@@ -197,59 +197,164 @@ class ToolBar(Frame):
 
         self.parent = parent
 
-        elements = [
-            Button(self, image=icons['actions']['open']['file'], command=open_files),
-            Button(self, image=icons['actions']['open']['folder'], command=open_folder),
-            Button(self, image=icons['actions']['save'], command=save_files),
-            Button(self, image=icons['actions']['refresh'], command=refresh_files),
-            Separator(self, orient='vertical'),
-            Button(self, image=icons['actions']['cut']),
-            Button(self, image=icons['actions']['copy']),
-            Button(self, image=icons['actions']['paste']),
-            Separator(self, orient='vertical'),
-            Button(self, image=icons['actions']['rename']),
-            Button(self, image=icons['actions']['edit']),
-            Button(self, image=icons['actions']['delete']),
-            Separator(self, orient='vertical'),
-            Button(self, image=icons['actions']['new']['tag']['byte']),
-            Button(self, image=icons['actions']['new']['tag']['short']),
-            Button(self, image=icons['actions']['new']['tag']['int']),
-            Button(self, image=icons['actions']['new']['tag']['long']),
-            Button(self, image=icons['actions']['new']['tag']['float']),
-            Button(self, image=icons['actions']['new']['tag']['double']),
-            Button(self, image=icons['actions']['new']['tag']['byte_array']),
-            Button(self, image=icons['actions']['new']['tag']['int_array']),
-            Button(self, image=icons['actions']['new']['tag']['string']),
-            Button(self, image=icons['actions']['new']['tag']['list']),
-            Button(self, image=icons['actions']['new']['tag']['compound']),
-            Separator(self, orient='vertical'),
-            Button(self, image=icons['actions']['search'])
+        toolbar_config = [
+            {
+                'type': 'button',
+                'title': 'Open Files',
+                'icon': icons['actions']['open']['file'],
+                'command': open_files
+            },
+            {
+                'type': 'button',
+                'title': 'Open Folder',
+                'icon': icons['actions']['open']['folder'],
+                'command': open_folder
+            },
+            {
+                'type': 'button',
+                'title': 'Save Files',
+                'icon': icons['actions']['save'],
+                'command': save_files
+            },
+            {
+                'type': 'button',
+                'title': 'Refresh Contents From Disk...',
+                'icon': icons['actions']['refresh'],
+                'command': refresh_files
+            },
+            {
+                'type': 'separator'
+            },
+            {
+                'type': 'button',
+                'title': 'Cut',
+                'icon': icons['actions']['cut'],
+                'command': None
+            },
+            {
+                'type': 'button',
+                'title': 'Copy',
+                'icon': icons['actions']['copy'],
+                'command': None
+            },
+            {
+                'type': 'button',
+                'title': 'Paste',
+                'icon': icons['actions']['paste'],
+                'command': None
+            },
+            {
+                'type': 'separator'
+            },
+            {
+                'type': 'button',
+                'title': 'Rename Tag',
+                'icon': icons['actions']['rename'],
+                'command': None
+            },
+            {
+                'type': 'button',
+                'title': 'Edit Tag',
+                'icon': icons['actions']['edit'],
+                'command': None
+            },
+            {
+                'type': 'button',
+                'title': 'Delete Tag',
+                'icon': icons['actions']['delete'],
+                'command': None
+            },
+            {
+                'type': 'separator'
+            },
+            {
+                'type': 'button',
+                'title': 'New Byte Tag',
+                'icon': icons['actions']['new']['tag']['byte'],
+                'command': None
+            },
+            {
+                'type': 'button',
+                'title': 'New Short Tag',
+                'icon': icons['actions']['new']['tag']['short'],
+                'command': None
+            },
+            {
+                'type': 'button',
+                'title': 'New Int Tag',
+                'icon': icons['actions']['new']['tag']['int'],
+                'command': None
+            },
+            {
+                'type': 'button',
+                'title': 'New Long Tag',
+                'icon': icons['actions']['new']['tag']['long'],
+                'command': None
+            },
+            {
+                'type': 'button',
+                'title': 'New Float Tag',
+                'icon': icons['actions']['new']['tag']['float'],
+                'command': None
+            },
+            {
+                'type': 'button',
+                'title': 'New Double Tag',
+                'icon': icons['actions']['new']['tag']['double'],
+                'command': None
+            },
+            {
+                'type': 'button',
+                'order': 19,
+                'title': 'New Byte Array Tag',
+                'icon': icons['actions']['new']['tag']['byte_array'],
+                'command': None
+            },
+            {
+                'type': 'button',
+                'title': 'New Int Array Tag',
+                'icon': icons['actions']['new']['tag']['int_array'],
+                'command': None
+            },
+            {
+                'type': 'button',
+                'title': 'New String Tag',
+                'icon': icons['actions']['new']['tag']['string'],
+                'command': None
+            },
+            {
+                'type': 'button',
+                'title': 'New List Tag',
+                'icon': icons['actions']['new']['tag']['list'],
+                'command': None
+            },
+            {
+                'type': 'button',
+                'title': 'New Compound Tag',
+                'icon': icons['actions']['new']['tag']['compound'],
+                'command': None
+            },
+            {
+                'type': 'separator'
+            },
+            {
+                'type': 'button',
+                'title': 'Find...',
+                'icon': icons['actions']['search'],
+                'command': None
+            }
         ]
 
-        tooltips = [
-            Pmw.Balloon(self).bind(elements[0], 'Open Files'),
-            Pmw.Balloon(self).bind(elements[1], 'Open Folder'),
-            Pmw.Balloon(self).bind(elements[2], 'Save Files'),
-            Pmw.Balloon(self).bind(elements[3], 'Refresh Files From Disk'),
-            Pmw.Balloon(self).bind(elements[5], 'Cut'),
-            Pmw.Balloon(self).bind(elements[6], 'Copy'),
-            Pmw.Balloon(self).bind(elements[7], 'Paste'),
-            Pmw.Balloon(self).bind(elements[9], 'Rename Tag'),
-            Pmw.Balloon(self).bind(elements[10], 'Edit Tag'),
-            Pmw.Balloon(self).bind(elements[11], 'Delete Tag'),
-            Pmw.Balloon(self).bind(elements[13], 'New Byte Tag'),
-            Pmw.Balloon(self).bind(elements[14], 'New Short Tag'),
-            Pmw.Balloon(self).bind(elements[15], 'New Int Tag'),
-            Pmw.Balloon(self).bind(elements[16], 'New Long Tag'),
-            Pmw.Balloon(self).bind(elements[17], 'New Float Tag'),
-            Pmw.Balloon(self).bind(elements[18], 'New Double Tag'),
-            Pmw.Balloon(self).bind(elements[19], 'New Byte Array Tag'),
-            Pmw.Balloon(self).bind(elements[20], 'New Int Array Tag'),
-            Pmw.Balloon(self).bind(elements[21], 'New String Tag'),
-            Pmw.Balloon(self).bind(elements[22], 'New List Tag'),
-            Pmw.Balloon(self).bind(elements[23], 'New Compound Tag'),
-            Pmw.Balloon(self).bind(elements[25], 'Find...')
-        ]
+        elements = []
+        for element in toolbar_config:
+            if element['type'] == 'separator':
+                elements.append(
+                    Separator(self, orient='vertical')
+                )
+            elif element['type'] == 'button':
+                button = Button(self, image=element['icon'], command=element['command'])
+                Pmw.Balloon(self).bind(button, element['title'])
+                elements.append(button)
 
         for e in elements:
             if isinstance(e, Separator):
