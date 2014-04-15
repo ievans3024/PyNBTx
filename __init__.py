@@ -11,7 +11,7 @@ from tkinter import BOTH, filedialog, Menu, N, NW, PhotoImage, S, Tk, messagebox
 from tkinter.ttk import Button, Frame, Separator, Style, Treeview
 
 import nbt
-import Pmw  # This is not installed by default
+import Pmw
 
 # Tk instantiated outside of __main__ to allow use of Image classes for icon definitions
 root = Tk()
