@@ -11,7 +11,7 @@ from tkinter import BOTH, filedialog, Menu, N, NW, PhotoImage, S, Tk, messagebox
 from tkinter.ttk import Button, Frame, Separator, Style, Treeview
 
 import nbt
-import Pmw
+import Pmw  # This is not installed by default
 
 # Tk instantiated outside of __main__ to allow use of Image classes for icon definitions
 root = Tk()
@@ -108,7 +108,7 @@ def open_folder():
 def open_mc_dir():
     global loaded_files
 
-    if str(platform) == 'windows':
+    if str(platform) in ('win32', 'win64'):
         mc_dir = join(getenv('APPDATA'), '.minecraft', 'saves')
     elif str(platform) in ('mac', 'darwin'):
         mc_dir = join(expanduser('~'), 'Library', 'Application Support', 'minecraft', 'saves')
