@@ -403,20 +403,25 @@ class TreeDisplay(object):
     Acts as an intermediary between a treeview object and one or more nbt objects
     """
 
-    def __init__(self, treeview, files=None, dir=None):
+    def __init__(self, treeview):
 
         self.treeview = treeview
-        self.files = files
         self.file_tree_map = {}
 
-        if files:
-            if not dir:
-                file_counter = 0
-                for f in files:
-                    filename = files[f].name
-                    self.treeview.insert('', '%i' % file_counter, filename,
-                                         text=filename, image=icons['tags']['compound'])
-                    file_counter += 1
+    def refresh(self):
+
+        global loaded_files
+
+        if loaded_files:
+            file_counter = 0
+            for f in loaded_files:
+                filename = '{file} ({save})'.format(
+                    save=split(split(loaded_files[f].filename)[0])[-1],
+                    file=split(loaded_files[f].filename)[-1]
+                )
+                self.treeview.insert('', '%i' % file_counter, filename,
+                                     text=filename, image=icons['tags']['compound'])
+                file_counter += 1
 
 
 class MainWindow(Frame):
@@ -439,6 +444,7 @@ class MainWindow(Frame):
         self.menu = MainMenu(root)
         self.toolbar = ToolBar(self)
         self.tree = Treeview(self, height=20)
+        self.tree_display = TreeDisplay(self.tree)
 
         self.ui_init()
 
@@ -446,33 +452,13 @@ class MainWindow(Frame):
         root['menu'] = self.menu
         self.toolbar.pack(anchor=NW, padx=4, pady=4)
         self.tree.column('#0', width=300)
-        self.tree_init()
         self.tree.pack(fill=BOTH, anchor=NW, padx=4, pady=4)
-
-    def tree_init(self):
-        # TODO: move this to a method in TreeDisplay -> app.tree_display.refresh(files=None, dir=None)
-        tree_display = TreeDisplay(self.tree, files=loaded_files, dir=loaded_dir)
-
-        '''
-        tree.insert('', 'end', 'root', text='root')
-        tree.insert('root', '0', 'one', text='one')
-        tree.insert('one', '0', 'two', text='two')
-        tree.insert('two', '0', 'three', text='three')
-        tree.insert('three', '0', 'four', text='four')
-        tree.insert('four', '0', 'five', text='five')
-        tree.insert('five', '0', 'six', text='six')
-        tree.insert('six', '0', 'seven', text='seven')
-        tree.insert('seven', '0', 'eight', text='eight')
-        tree.insert('eight', '0', 'nine', text='nine')
-        tree.insert('nine', '0', 'ten', text='ten')
-        tree.pack(fill=BOTH, anchor=NW, padx=4, pady=4)
-        '''
 
 
 def main():
 
     app = MainWindow(root)
-    handler.bind('open_files', app.tree_init)
+    handler.bind('open_files', app.tree_display.refresh)
     root.mainloop()
 
 if __name__ == '__main__':
