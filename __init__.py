@@ -4,6 +4,8 @@
 __author__ = 'ievans3024'
 __version__ = '0.0.2'
 
+# TODO: REDO ALL OF THIS WITH PySide/Qt4/QML
+
 from os import getcwd, getenv, walk, access, F_OK
 from os.path import expanduser, join, split
 from sys import platform
